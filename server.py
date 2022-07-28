@@ -13,12 +13,13 @@ AWESOMENESS = [
     'oh-so-not-meh', 'brilliant', 'ducky', 'coolio', 'incredible',
     'wonderful', 'smashing', 'lovely']
 
-
+INSULTS = [
+  'stinky', 'ugly', 'cringe', 'dumb', 'A CLOWN', 'THE ENTIRE CIRCUS']
 @app.route('/')
 def start_here():
     """Home page."""
 
-    return "<!doctype html><html>Hi! This is the home page.</html>"
+    return "<!doctype html><html>Hi! This is the home page. <a href='/hello'>Tell us about yourself!</a></html>"
 
 
 @app.route('/hello')
@@ -33,8 +34,30 @@ def say_hello():
       </head>
       <body>
         <h1>Hi There!</h1>
-        <form action="/greet">
-          What's your name? <input type="text" name="person">
+        <form action="/greet" method='GET'>
+          What's your name? <input type="text" name="person"><br>
+          What compliment would you like? <select name="compliment">
+            <option>awesome</option>
+            <option>terrific</option>
+            <option>neato</option>
+            <option>fantabulous</option>
+            <option>wowza</option>
+            <option>brilliant</option>
+            <option>coolio</option>
+          </select>
+          <input type="submit" value="Submit">
+        </form>
+        <br>
+        <form action="/diss" method='GET'>
+          Or would you like to be roasted instead? <input type="text" name="roastee"><br>
+          How would you like to be insulted? <select name="roast">
+            <option>stinky</option>
+            <option>ugly</option>
+            <option>cringe</option>
+            <option>dumb</option>
+            <option>A CLOWN</option>
+            <option>THE ENTIRE CIRCUS</option>
+          </select>
           <input type="submit" value="Submit">
         </form>
       </body>
@@ -45,10 +68,8 @@ def say_hello():
 @app.route('/greet')
 def greet_person():
     """Get user by name."""
-
     player = request.args.get("person")
-
-    compliment = choice(AWESOMENESS)
+    compliment = request.args.get("compliment")
 
     return f"""
     <!doctype html>
@@ -62,6 +83,23 @@ def greet_person():
     </html>
     """
 
+@app.route('/diss')
+def diss_person():
+  """Diss the user. No, really."""
+  roastee = request.args.get("roastee")
+  roast =request.args.get("roast")
+
+  return f"""
+  <!doctype html>
+  <html>
+    <head>
+      <title>A Roast</title>
+    </head>
+    <body>
+      Hello {roastee}. I think you're {roast}.
+    </body>
+  </html>
+"""
 
 if __name__ == '__main__':
     # debug=True gives us error messages in the browser and also "reloads"
